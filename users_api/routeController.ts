@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
+import { IBodyUser } from '../interfaces/bodyUser';
 
 
-export const getUser = async (req: Request, res: Response) => {
-    return res.json("Hello world")
+export const createUser = async (req: Request, res: Response) => {
+    const { _id, password, ...userData } = req.body as IBodyUser;
+
+    return res.json({ password, ...userData })
 }
