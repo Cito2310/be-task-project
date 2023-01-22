@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { check } from "express-validator";
 
-import { createUser } from './routeController';
+import { createUser } from './userControllers';
 import { checkFields } from '../middlewares/checkFields';
 
 

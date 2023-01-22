@@ -3,7 +3,7 @@ import cors from "cors";
 
 import { dbConnection } from './database/config'; 
 
-import { routeUser } from './users_api/routeUser';
+import { routeUser } from './users_api/userRoutes';
 
 export class Server {
     private app = express()
@@ -19,7 +19,6 @@ export class Server {
 
     private routes() {
         this.app.use( this.paths.user, routeUser )
-        // this.app.use( this.paths.product , routeProduct)
     }
 
     private connectDB() {dbConnection()}
