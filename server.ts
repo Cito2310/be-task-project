@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-// import { dbConnection } from './database/config'; 
+import { dbConnection } from './database/config'; 
 
 import { routeUser } from './users_api/routeUser';
 
@@ -14,7 +14,7 @@ export class Server {
     constructor(){
         this.middlewares();
         this.routes();
-        // this.connectDB();
+        this.connectDB();
     }
 
     private routes() {
@@ -22,7 +22,7 @@ export class Server {
         // this.app.use( this.paths.product , routeProduct)
     }
 
-    // private connectDB() {dbConnection()}
+    private connectDB() {dbConnection()}
 
     private middlewares() {
         this.app.use(cors());
