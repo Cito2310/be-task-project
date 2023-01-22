@@ -3,12 +3,12 @@ import cors from "cors";
 
 // import { dbConnection } from './database/config'; 
 
-// import { routeProduct } from "./product_API/productRoutes";
+import { routeUser } from './users_api/routeUser';
 
 export class Server {
     private app = express()
     private paths = {
-        product : "/api/user" 
+        user : "/api/user" 
     }
 
     constructor(){
@@ -18,6 +18,7 @@ export class Server {
     }
 
     private routes() {
+        this.app.use( this.paths.user, routeUser )
         // this.app.use( this.paths.product , routeProduct)
     }
 
