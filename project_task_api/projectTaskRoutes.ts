@@ -38,7 +38,7 @@ routeProjectTask.get("/:idProject", [
 ], getProjectTaskID);
 
 // route change collaborators - JWT Admin
-routeProjectTask.put("/:idProject/collaborators/:action/:idUser", [
+routeProjectTask.put("/:idProject/collaborators/:action/:idNewUser", [
     validateJWT,
 
     check("idProject", "0024 - id project invalid").isMongoId(),
@@ -103,7 +103,7 @@ routeProjectTask.get("/:idProject/task",[
 ], getAllTasks)
 
 // route edit task - JWT
-routeProjectTask.put("/task/:idTask",[
+routeProjectTask.put("/:idProject/task/:idTask",[
     validateJWT,
 
     check("idTask", "0025 - id task invalid").isMongoId(),
@@ -120,7 +120,7 @@ routeProjectTask.put("/task/:idTask",[
 ], editTask)
 
 // route delete task - JWT
-routeProjectTask.delete("/task/:idTask",[
+routeProjectTask.delete("/:idProject/task/:idTask",[
     validateJWT,
 
     check("idTask", "0025 - id task invalid").isMongoId(),
