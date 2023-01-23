@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
-import { IBodyUser } from '../interfaces/bodyUser';
 import bcryptjs from "bcryptjs";
+
 import { User } from "./userModels";
+
+import { IBodyUser } from '../types/bodyUser';
+
 import { generatorJWT } from '../helpers/generatorJWT';
 
 

@@ -1,12 +1,5 @@
 import { model, Schema, Types } from "mongoose";
-
-export interface IUser {
-    email: string,
-    password: string,
-    username: string,
-
-    _id: Types.ObjectId,
-}
+import { IUser } from '../types/user';
 
 const userSchema = new Schema<IUser>({
     email: {type: String, required: true, lowercase: true},
