@@ -13,7 +13,6 @@ const projectTaskSchema = new Schema<IProjectTask>({
     },
     tasks: [{
         type: Schema.Types.ObjectId, 
-        required: true
     }],
 })
 
