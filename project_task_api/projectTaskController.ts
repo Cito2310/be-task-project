@@ -3,6 +3,10 @@ import bcryptjs from "bcryptjs";
 
 import { generatorJWT } from '../helpers/generatorJWT';
 
+import { User } from '../users_api/userModels';
+import { Task } from './taskModels';
+import { ProjectTask } from './projectTaskModels';
+
 // POST - Create Project Task - Token
 export const createProjectTask = async (req: Request, res: Response) => {
     return res.status(501)
