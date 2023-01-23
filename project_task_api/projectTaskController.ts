@@ -6,6 +6,7 @@ import { generatorJWT } from '../helpers/generatorJWT';
 import { User } from '../users_api/userModels';
 import { Task } from './taskModels';
 import { ProjectTask } from './projectTaskModels';
+import { IUser } from '../types/modelMongoDB';
 
 // POST - Create Project Task - Token
 export const createProjectTask = async (req: Request, res: Response) => {
@@ -40,7 +41,23 @@ export const createProjectTask = async (req: Request, res: Response) => {
 
 // GET - Get Project Task by User - Token
 export const getProjectsTasksUser = async (req: Request, res: Response) => {
-    return res.status(501)
+    try {
+        const { _id, email, password, username } = req.user as IUser;
+
+        // find project task
+        const findProjectTask = await ProjectTask.find({
+            collaborators: _id
+        })
+
+        // return project task
+        return res.status(200).json(findProjectTask)
+
+
+    } catch (error) {
+        return res.status(500).json({
+            msg: "1500 - unexpected server error"
+        })
+    }
 }
 
 // GET - Get One Project Task by ID - Token
@@ -62,3 +79,13 @@ export const changeTitle = async (req: Request, res: Response) => {
 export const deleteProjectTask = async (req: Request, res: Response) => {
     return res.status(501)
 }
+
+// try {
+        
+
+
+// } catch (error) {
+//     return res.status(500).json({
+//         msg: "1500 - unexpected server error"
+//     })
+// }
