@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { IBodyUser } from '../interfaces/bodyUser';
 import bcryptjs from "bcryptjs";
 import { User } from "./userModels";
+import { generatorJWT } from '../helpers/generatorJWT';
 
 
 export const createUser = async (req: Request, res: Response) => {
@@ -25,6 +26,9 @@ export const createUser = async (req: Request, res: Response) => {
     const newUser = new User(userData);
     await newUser.save();
 
+    // generator JWT
+    const token: string = await generatorJWT({ id: newUser._id });
+
     // return new user
-    return res.json( newUser );
+    return res.json({ user: newUser, token });
 }
