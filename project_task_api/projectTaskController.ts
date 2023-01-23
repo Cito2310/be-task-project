@@ -62,7 +62,25 @@ export const getProjectsTasksUser = async (req: Request, res: Response) => {
 
 // GET - Get One Project Task by ID - Token
 export const getProjectTaskID = async (req: Request, res: Response) => {
-    return res.status(501)
+    try {
+        const { _id, email, password, username } = req.user as IUser;
+        const { idProject } = req.params;
+
+        // find project task
+        const findProjectTask = await ProjectTask.find({
+            _id: idProject,
+            collaborators: _id
+        })
+
+        // return project task
+        return res.status(200).json(findProjectTask)
+
+
+    } catch (error) {
+        return res.status(500).json({
+            msg: "1500 - unexpected server error"
+        })
+    }
 }
 
 // PUT - Project Task by ID - Change Collaborators - Token and admin
