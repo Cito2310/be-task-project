@@ -3,7 +3,7 @@ import bcryptjs from "bcryptjs";
 
 import { User } from "./userModels";
 
-import { IBodyCreateUser, IBodyChangePassword } from '../types/routeBodyUser';
+import { IBodyCreateUser, IBodyChangeDataUser } from '../types/routeBodyUser';
 
 import { generatorJWT } from '../helpers/generatorJWT';
 
@@ -38,35 +38,66 @@ export const createUser = async (req: Request, res: Response) => {
         
 
     } catch (error) {
-        return res.status(500).json([{
+        console.log(error)
+        return res.status(500).json({
             msg: "1500 - unexpected server error"
-        }])
+        })
     }
 }
 
 
-// ChangePassword - Need Token
-export const changePassword = async (req: Request, res: Response) => {
+// ChangeDataUser - Need Token
+export const ChangeDataUser = async (req: Request, res: Response) => {
     try {
-        const { password } = req.body as IBodyChangePassword;
-        const { _id } = req.user;
+        const { _id: id, ...newData } = req.body as IBodyChangeDataUser;
+        const { _id, username, email, password } = req.user;
+
+
+        // C H E C K S
+        // check user data not is same ( email - password - username )
+        if ( newData.email && email === newData.email ) return res.status(400).json({msg: "1400 - Equal email"});
+
+        const validPassword = bcryptjs.compareSync( newData.password || "", password );
+        console.log(validPassword, newData.password, password, req.user)
+        if ( newData.password && validPassword ) return res.status(400).json({msg: "2400 - Equal password"});
+
+        if ( newData.username && username === newData.username ) return res.status(400).json({msg: "3400 - Equal username"});
+
+        // check user data already exist
+        const [ existUsername, existEmail ] = await Promise.all([
+            User.findOne({ username: newData.username }),
+            User.findOne({ email: newData.email }),
+        ])
+
+        if ( existEmail ) return res.status(400).json({msg: "4400 - This email is already registered"});
+        if ( existUsername ) return res.status(400).json({msg: "5400 - This username is already registered"});
+
+
+        // CHANGE AND SAVE USER
+        // change password && encrypt password
+        if ( newData.password ) {
+            const salt = bcryptjs.genSaltSync()
+            newData.password = bcryptjs.hashSync(newData.password, salt)
+        }
 
         // find user and update
-        const userChangedPassword = await User.findByIdAndUpdate(
-            _id, 
-            { password }, 
-            { new: true }
-        )
-        await userChangedPassword?.save();
+        let userChanged: any;
+        try {
+            userChanged = await User.findByIdAndUpdate( _id, newData );
+        } catch (error) {
+            return res.status(404).json({ msg: "1404 - User not exist" });
+        }
 
-        res.status(204).json([{
-            msg: "password changed successfully"
-        }])
+        // save user data
+        await userChanged.save();
+
+        // return
+        return res.status(204).json()
 
 
     } catch (error) {
-        return res.status(500).json([{
+        return res.status(500).json({
             msg: "1500 - unexpected server error"
-        }])
+        })
     }
 }

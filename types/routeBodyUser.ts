@@ -7,6 +7,9 @@ export interface IBodyCreateUser {
     email: string,
 }
 
-export interface IBodyChangePassword {
-    password: string,
+export interface IBodyChangeDataUser {
+    _id?: Types.ObjectId,
+    username?: string,
+    email?: string,
+    password?: string,
 }
