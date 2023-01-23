@@ -1,24 +1,25 @@
-import { model, Schema, Types } from "mongoose";
+import { model, Schema } from "mongoose";
+import { IProjectTask } from '../types/modelMongoDB';
 
-const projectTaskSchema = new Schema<IUser>({
-    titleProject: {type: String, required: true, lowercase: true},
-    collaborators: {
-        type: [ Types.ObjectId ], 
+const projectTaskSchema = new Schema<IProjectTask>({
+    title: {type: String, required: true, lowercase: true},
+    collaborators: [{
+        type: Schema.Types.ObjectId, 
         required: true
-    },
+    }],
     admin: {
-        type: [ Types.ObjectId ],
+        type: Schema.Types.ObjectId,
         required: true
     },
-    tasks: {
-        type: [ Types.ObjectId ], 
+    tasks: [{
+        type: Schema.Types.ObjectId, 
         required: true
-    },
+    }],
 })
 
 projectTaskSchema.methods.toJSON = function() {
-    const {__v , password, ...rest } = this.toObject();
+    const {__v , ...rest } = this.toObject();
     return rest;
 }
 
-export const ProjectTask = model("User", projectTaskSchema);
+export const ProjectTask = model("ProjectTask", projectTaskSchema);

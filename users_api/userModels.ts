@@ -1,5 +1,5 @@
 import { model, Schema, Types } from "mongoose";
-import { IUser } from '../types/user';
+import { IUser } from '../types/modelMongoDB';
 
 const userSchema = new Schema<IUser>({
     email: {type: String, required: true, lowercase: true},
