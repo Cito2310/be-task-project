@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { check } from "express-validator";
 
-import { createUser } from './userControllers';
+import { changePassword, createUser } from './userControllers';
 import { checkFields } from '../middlewares/checkFields';
 import { validateJWT } from '../middlewares/validateJWT';
 
@@ -31,4 +31,4 @@ routeUser.put("/password",[
     check("password", "0005 - password invalid").trim().isString(),
     check("password", "0006 - password length can only be greater than 8 and less than 24 characters").trim().isLength({min: 8, max: 32}),
     checkFields
-], (req,res)=>{res.json("hola")});
+], changePassword);

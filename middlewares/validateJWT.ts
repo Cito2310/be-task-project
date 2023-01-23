@@ -22,7 +22,7 @@ export const validateJWT = async (
 
         // search user with id
         const user = await User.findById(id);
-
+        
         // check user exist
         if ( !user ) {
             return res.status(401).json([{
