@@ -15,8 +15,8 @@ const userSchema = new Schema<IUser>({
 })
 
 userSchema.methods.toJSON = function() {
-    const {__v , ...rest } = this.toObject();
+    const {__v , password, ...rest } = this.toObject();
     return rest;
 }
 
-export const Product = model("User", userSchema);
+export const User = model("User", userSchema);
