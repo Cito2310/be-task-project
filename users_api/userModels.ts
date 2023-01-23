@@ -5,6 +5,12 @@ const userSchema = new Schema<IUser>({
     email: {type: String, required: true, lowercase: true},
     password: {type: String, required: true},
     username: {type: String, required: true},
+    project: [
+        { type: Schema.Types.ObjectId }
+    ],
+    requestCollaborator: [
+        { type: Schema.Types.ObjectId }
+    ]
 })
 
 userSchema.methods.toJSON = function() {

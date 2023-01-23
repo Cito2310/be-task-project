@@ -5,6 +5,8 @@ export interface IUser {
     email: string,
     password: string,
     username: string,
+    project: Types.ObjectId[] | IProjectTask[] | []
+    requestCollaborator: Types.ObjectId[] | []
 }
 
 export interface IProjectTask {

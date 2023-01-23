@@ -42,7 +42,7 @@ export const createProjectTask = async (req: Request, res: Response) => {
 // GET - Get Project Task by User - Token
 export const getProjectsTasksUser = async (req: Request, res: Response) => {
     try {
-        const { _id, email, password, username } = req.user as IUser;
+        const { _id } = req.user as IUser;
 
         // find project task
         const findProjectTask = await ProjectTask.find({
@@ -63,7 +63,7 @@ export const getProjectsTasksUser = async (req: Request, res: Response) => {
 // GET - Get One Project Task by ID - Token
 export const getProjectTaskID = async (req: Request, res: Response) => {
     try {
-        const { _id, email, password, username } = req.user as IUser;
+        const { _id } = req.user as IUser;
         const { idProject } = req.params;
 
         // find project task
