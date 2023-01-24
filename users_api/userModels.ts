@@ -8,9 +8,6 @@ const userSchema = new Schema<IUser>({
     project: [
         { type: Schema.Types.ObjectId }
     ],
-    requestCollaborator: [
-        { type: Schema.Types.ObjectId }
-    ]
 })
 
 userSchema.methods.toJSON = function() {

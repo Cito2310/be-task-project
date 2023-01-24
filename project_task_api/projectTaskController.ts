@@ -85,7 +85,29 @@ export const getProjectTaskID = async (req: Request, res: Response) => {
 
 // PUT - Project Task by ID - Change Collaborators - Token and admin
 export const changeCollaborators = async (req: Request, res: Response) => {
-    return res.status(501)
+    try {
+        const { idProject, action, idNewUser } = req.params;
+        const { _id, email, password, project, requestCollaborator, username } = req.user as IUser;
+    
+        // action add collaborator
+        if (action === "add") {
+            // check project already exist
+            const newUser = await User.findById(idNewUser);
+
+            
+        }
+
+        // action delete collaborator
+        if (action === "sub") {
+
+        } 
+        
+
+    } catch (error) {
+        return res.status(500).json({
+            msg: "1500 - unexpected server error"
+        })
+    }
 }
 
 // PUT - Project Task by ID - Change Title - Token and admin

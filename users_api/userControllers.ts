@@ -47,7 +47,7 @@ export const createUser = async (req: Request, res: Response) => {
 
 
 // ChangeDataUser - Need Token
-export const ChangeDataUser = async (req: Request, res: Response) => {
+export const changeDataUser = async (req: Request, res: Response) => {
     try {
         const { _id: id, ...newData } = req.body as IBodyChangeDataUser;
         const { _id, username, email, password } = req.user;
@@ -93,6 +93,66 @@ export const ChangeDataUser = async (req: Request, res: Response) => {
 
         // return
         return res.status(204).json()
+
+
+    } catch (error) {
+        return res.status(500).json({
+            msg: "1500 - unexpected server error"
+        })
+    }
+}
+
+
+// Get User - Need Token
+export const getUser = async (req: Request, res: Response) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if ( !user ) return res.status(404).json({ msg: "9404 - user not found" });
+        return res.status(200).json(user);
+        
+
+    } catch (error) {
+        return res.status(500).json({
+            msg: "1500 - unexpected server error"
+        })
+    }
+}
+
+
+// Delete User - Need Token
+export const deleteUser = async (req: Request, res: Response) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if ( !user ) return res.status(404).json({ msg: "9404 - user not found" });
+        await User.findByIdAndDelete(req.user._id);
+        return res.status(204).json();
+
+
+    } catch (error) {
+        return res.status(500).json({
+            msg: "1500 - unexpected server error"
+        })
+    }
+}
+
+
+// Login User - Need Token
+export const loginUser = async (req: Request, res: Response) => {
+    try {
+        const { username, password } = req.body;
+
+        // CHECK DATA
+        // check username
+        const existUser = await User.findOne({ username });
+        if ( !existUser ) return res.status(400).json({ msg: "9753 - login invalid" });
+
+        // check password
+        const samePassword = bcryptjs.compareSync( password, existUser.password );
+        if ( !samePassword ) return res.status(400).json({ msg: "9753 - login invalid" })
+
+        // generate JWT and return
+        const token: string = await generatorJWT({ id: existUser._id });
+        return res.status(200).json({ token });
 
 
     } catch (error) {
