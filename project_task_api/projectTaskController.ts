@@ -24,6 +24,12 @@ export const createProjectTask = async (req: Request, res: Response) => {
             creator: req.user._id
         });
 
+        // add project to user
+        const findUser = await User.findById(req.user._id);
+        // @ts-ignore
+        findUser?.project.push(newProjectTask._id);
+        findUser?.save();
+
         // save new project
         await newProjectTask.save();
 
@@ -44,7 +50,7 @@ export const getProjectsTasksUser = async (req: Request, res: Response) => {
         const { _id } = req.user as IUser;
 
         // get projects
-        const user = await User.findById(_id).populate("ProjectTask");
+        const user = await User.findById(_id).populate("project");
 
         // exist user
         if ( !user ) return res.status(404).json({msg: "9404 - User not found"});
