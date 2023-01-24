@@ -1,10 +1,11 @@
 {
   "name": "be-task-project",
-  "version": "0.13.4",
+  "version": "0.13.5",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "vitest",
+    "start": "node dist/app.js",
     "dev": "concurrently \"tsc -w\" \"nodemon dist/app.js\" ",
     "build": "tsc",
     "update-patch": "npm version patch --no-git-tag-version --force",
