@@ -15,7 +15,7 @@ export const createTask = async (req: Request, res: Response) => {
         if ( !project.includes( idProject ) ) return res.status(401).json({msg: "Not authorized"})
 
         // create task
-        const newTask = new Task({ idProject, title, description });
+        const newTask = new Task({ projectID: idProject, title, description });
 
         // add task to project task
         const projectTask = await ProjectTask.findById(idProject);
@@ -32,9 +32,13 @@ export const createTask = async (req: Request, res: Response) => {
             newTask.save(),
             projectTask.save()
         ])
+       
+        // return newTask
+        return res.status(201).json(newTask);
 
 
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: "1500 - unexpected server error"
         })
@@ -53,7 +57,7 @@ export const editTask = async (req: Request, res: Response) => {
 
         try {
             // edit task
-            const editTask = await Task.findByIdAndUpdate( idTask, newData );
+            const editTask = await Task.findByIdAndUpdate( idTask, newData, {new: true} );
 
             // not found exist
             if ( !editTask ) return res.status(404).json({msg: "Task not found"});
@@ -83,23 +87,33 @@ export const deleteTask = async (req: Request, res: Response) => {
         // check project is user
         if ( !project.includes( idProject ) ) return res.status(401).json({msg: "Not authorized"})
 
-        try {
-            // delete task
-            await Task.findByIdAndDelete(idTask);
+        // get project and task exist
+        const [ projectExist, taskExist ] = await Promise.all([
+            ProjectTask.findById(idProject),
+            Task.findById(idTask)
+        ]);
 
-            // delete id in project task
-            const project = await ProjectTask.findById(idProject);
-            // @ts-ignore
-            project?.tasks.filter((taskID: string) => taskID !== idTask)
-            project?.save()
+        // check project exist
+        if ( !projectExist ) return res.status(404).json({msg: "Project not found"});
+        if ( !taskExist ) return res.status(404).json({msg: "Task not found"});
 
+        // check project have this task
+        // @ts-ignore
+        if ( !projectExist.tasks.includes( idTask ) ) return res.status(401).json({msg: "Not authorized delete task, project not have this task"});
 
-        } catch (error) {
-            return res.status(404).json({msg: "Task not found"})
-        }
+        // // delete task and task in project
+        await Task.findByIdAndDelete(idTask);
+        // @ts-ignore
+        projectExist.tasks = projectExist.tasks.filter((taskID: string) => !taskID.equals(idTask));
+
+        await projectExist.save()
+
+        // return
+        return res.status(204).json({})
 
 
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: "1500 - unexpected server error"
         })

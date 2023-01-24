@@ -133,29 +133,21 @@ export const deleteProjectTask = async (req: Request, res: Response) => {
         const existProject = await ProjectTask.findById(idProject);
         if ( !existProject ) return res.status(404).json({msg: "3404 - Project not found"});
 
-        // change title and save
-        existProject.title = req.body.title;
-        await existProject.save();
+        // delete task
+        const promiseDeleteTask = existProject.tasks.map( taskID => Task.findByIdAndDelete(taskID));
+        await Promise.all( promiseDeleteTask );
+
+        // delete project
+        await ProjectTask.findByIdAndDelete(idProject)
 
         // return new project
-        return res.status(202).json(existProject);
+        return res.status(204).json({});
 
 
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: "1500 - unexpected server error"
         })
     }
 }
-
-
-// export const nameController = async (req: Request, res: Response) => {
-//     try {
-        
-
-//     } catch (error) {
-//         return res.status(500).json({
-//             msg: "1500 - unexpected server error"
-//         })
-//     }
-// }
