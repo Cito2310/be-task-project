@@ -6,7 +6,7 @@ const userSchema = new Schema<IUser>({
     password: {type: String, required: true},
     username: {type: String, required: true},
     project: [
-        { type: Schema.Types.ObjectId }
+        { type: Schema.Types.ObjectId, ref: "ProjectTask" }
     ],
 })
 

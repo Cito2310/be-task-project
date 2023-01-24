@@ -2,10 +2,12 @@ import { Request, Response } from "express";
 import bcryptjs from "bcryptjs";
 
 import { User } from "./userModels";
+import { Task } from '../project_task_api/taskModels';
 
 import { IBodyCreateUser, IBodyChangeDataUser } from '../types/routeBodyUser';
 
 import { generatorJWT } from '../helpers/generatorJWT';
+import { ProjectTask } from '../project_task_api/projectTaskModels';
 
 // Create User
 export const createUser = async (req: Request, res: Response) => {
@@ -58,7 +60,6 @@ export const changeDataUser = async (req: Request, res: Response) => {
         if ( newData.email && email === newData.email ) return res.status(400).json({msg: "1400 - Equal email"});
 
         const validPassword = bcryptjs.compareSync( newData.password || "", password );
-        console.log(validPassword, newData.password, password, req.user)
         if ( newData.password && validPassword ) return res.status(400).json({msg: "2400 - Equal password"});
 
         if ( newData.username && username === newData.username ) return res.status(400).json({msg: "3400 - Equal username"});
@@ -122,8 +123,20 @@ export const getUser = async (req: Request, res: Response) => {
 // Delete User - Need Token
 export const deleteUser = async (req: Request, res: Response) => {
     try {
-        const user = await User.findById(req.user._id);
+        // check exist user
+        const user = await User.findById(req.user._id).populate("project");
         if ( !user ) return res.status(404).json({ msg: "9404 - user not found" });
+
+        // delete project and task
+        user.project.map( async( project) => {
+            const arrayPromiseTasks = project.tasks.map( task => {
+                return Task.findByIdAndDelete( task._id )
+            });
+            await Promise.all( arrayPromiseTasks ); // delete task
+            await ProjectTask.findByIdAndDelete( project._id ); // delete project
+        })
+
+        // delete user
         await User.findByIdAndDelete(req.user._id);
         return res.status(204).json();
 

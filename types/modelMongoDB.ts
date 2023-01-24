@@ -5,12 +5,13 @@ export interface IUser {
     email: string,
     password: string,
     username: string,
-    project: Types.ObjectId[] | IProjectTask[] | []
+    project: IProjectTask[] | []
 }
 
 export interface IProjectTask {
     _id: Types.ObjectId,
     title: string,
+    description: string,
     creator: Types.ObjectId | IUser
     tasks: ITask[] | [],
 }
