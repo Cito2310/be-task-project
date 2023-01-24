@@ -6,15 +6,13 @@ export interface IUser {
     password: string,
     username: string,
     project: Types.ObjectId[] | IProjectTask[] | []
-    requestCollaborator: Types.ObjectId[] | []
 }
 
 export interface IProjectTask {
     _id: Types.ObjectId,
     title: string,
-    collaborators: IUser[],
-    admin: IUser,
-    tasks: ITask[],
+    creator: Types.ObjectId | IUser
+    tasks: ITask[] | [],
 }
 
 export interface ITask {
