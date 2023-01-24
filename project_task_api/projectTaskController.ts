@@ -76,7 +76,7 @@ export const getProjectTaskID = async (req: Request, res: Response) => {
         if ( !project.includes(idProject) ) return res.status(401).json({msg: "Not authorized"})
 
         // find project task
-        const findProjectTask = await ProjectTask.findById( idProject ).populate("Task");
+        const findProjectTask = await ProjectTask.findById( idProject ).populate("tasks");
 
         // check project exist
         if ( !findProjectTask ) return res.status(404).json({msg: "3404 - Project not found"});
