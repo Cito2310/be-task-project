@@ -3,16 +3,14 @@ import { IProjectTask } from '../types/modelMongoDB';
 
 const projectTaskSchema = new Schema<IProjectTask>({
     title: {type: String, required: true, lowercase: true},
-    collaborators: [{
-        type: Schema.Types.ObjectId, 
-        required: true
-    }],
-    admin: {
+    creator: {
         type: Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: "User"
     },
     tasks: [{
         type: Schema.Types.ObjectId, 
+        ref: "Task"
     }],
 })
 
